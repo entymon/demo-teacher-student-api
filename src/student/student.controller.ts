@@ -16,11 +16,11 @@ export class StudentController {
     return this.studentService.findAll();
   }
 
-  @Get(':id')
+  @Get(':studentId')
   async getStudentById(
-    @Param('id') id: number,
+    @Param('studentId') studentId: number,
   ): Promise<FindStudentResponseDto> {
-    return this.studentService.findOne(id);
+    return this.studentService.findOne(studentId);
   }
 
   @Post()
@@ -31,11 +31,11 @@ export class StudentController {
     return newStudent;
   }
 
-  @Put(':id')
+  @Put(':studentId')
   async updateStudent(
-    @Param('id') id: number,
+    @Param('studentId') studentId: number,
     @Body() studentData: UpdateStudentDto,
   ): Promise<StudentResponseDto> {
-    return this.studentService.update(id, studentData);
+    return this.studentService.update(studentId, studentData);
   }
 }

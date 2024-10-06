@@ -1,17 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import { Teacher } from './teacher.model';
+import { TeacherRepository } from './teacher.repository';
 import { CreateTeacherDto, FindTeacherResponseDto } from './dto/teacher.dto';
 
 @Injectable()
 export class TeacherService {
-  constructor(
-    @InjectModel(Teacher)
-    private readonly teacherModel: typeof Teacher,
-  ) {}
+  constructor(private readonly teacherRepository: TeacherRepository) {}
 
   async getAllTeachers(): Promise<FindTeacherResponseDto[]> {
-    const teachers = await this.teacherModel.findAll();
+    const teachers = await this.teacherRepository.findAll();
     return teachers.map((teacher) => ({
       id: teacher.id,
       name: teacher.name,
@@ -20,7 +16,7 @@ export class TeacherService {
   }
 
   async getTeacherById(id: number): Promise<FindTeacherResponseDto> {
-    const teacher = await this.teacherModel.findByPk(id);
+    const teacher = await this.teacherRepository.findByPk(id);
     if (!teacher) {
       throw new Error('Teacher not found');
     }
@@ -34,7 +30,7 @@ export class TeacherService {
   async createTeacher(
     createTeacherDto: CreateTeacherDto,
   ): Promise<FindTeacherResponseDto> {
-    const teacher = await this.teacherModel.create(createTeacherDto);
+    const teacher = await this.teacherRepository.create(createTeacherDto);
     return {
       id: teacher.id,
       name: teacher.name,
@@ -43,7 +39,7 @@ export class TeacherService {
   }
 
   async deleteTeacher(id: number): Promise<FindTeacherResponseDto> {
-    const teacher = await this.teacherModel.findByPk(id);
+    const teacher = await this.teacherRepository.findByPk(id);
     if (!teacher) {
       throw new Error('Teacher not found');
     }

@@ -1,23 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import { Student } from './student.model';
+import { StudentRepository } from './student.repository';
 import {
   CreateStudentDto,
-  FindStudentResponseDto,
-  StudentResponseDto,
   UpdateStudentDto,
+  StudentResponseDto,
 } from './dto/student.dto';
 
 @Injectable()
 export class StudentService {
-  constructor(
-    @InjectModel(Student)
-    private readonly studentModel: typeof Student,
-  ) {}
+  constructor(private readonly studentRepository: StudentRepository) {}
 
-  async findAll(): Promise<FindStudentResponseDto[]> {
-    const students = await this.studentModel.findAll();
-
+  async findAll(): Promise<StudentResponseDto[]> {
+    const students = await this.studentRepository.findAll();
     return students.map((student) => ({
       id: student.id,
       name: student.name,
@@ -26,8 +20,8 @@ export class StudentService {
     }));
   }
 
-  async findOne(id: number): Promise<FindStudentResponseDto> {
-    const student = await this.studentModel.findByPk(id);
+  async findOne(id: number): Promise<StudentResponseDto> {
+    const student = await this.studentRepository.findByPk(id);
     if (!student) {
       throw new Error('Student not found');
     }
@@ -42,7 +36,7 @@ export class StudentService {
   async create(
     createStudentDto: CreateStudentDto,
   ): Promise<StudentResponseDto> {
-    const student = await this.studentModel.create(createStudentDto);
+    const student = await this.studentRepository.create(createStudentDto);
     return {
       id: student.id,
       name: student.name,
@@ -55,11 +49,10 @@ export class StudentService {
     id: number,
     updateStudentDto: UpdateStudentDto,
   ): Promise<StudentResponseDto> {
-    const student = await this.studentModel.findByPk(id);
+    const student = await this.studentRepository.update(id, updateStudentDto);
     if (!student) {
       throw new Error('Student not found');
     }
-    await student.update(updateStudentDto);
     return {
       id: student.id,
       name: student.name,
@@ -71,7 +64,7 @@ export class StudentService {
   async getStudentsByTeacherId(
     teacherId: number,
   ): Promise<StudentResponseDto[]> {
-    const students = await this.studentModel.findAll({ where: { teacherId } });
+    const students = await this.studentRepository.findAllByTeacherId(teacherId);
     return students.map((student) => ({
       id: student.id,
       name: student.name,
@@ -85,9 +78,10 @@ export class StudentService {
     studentId: number,
     updateStudentDto: UpdateStudentDto,
   ): Promise<StudentResponseDto> {
-    const student = await this.studentModel.findOne({
-      where: { id: studentId, teacherId },
-    });
+    const student = await this.studentRepository.findOneByTeacherId(
+      teacherId,
+      studentId,
+    );
     if (!student) {
       throw new Error('Student not found');
     }

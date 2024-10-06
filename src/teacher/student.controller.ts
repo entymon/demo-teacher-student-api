@@ -12,9 +12,9 @@ export class TeacherStudentController {
 
   @Get()
   async getStudentsByTeacherId(
-    @Param('id') id: number,
+    @Param('teacherId') teacherId: number,
   ): Promise<FindStudentResponseDto[]> {
-    return this.studentService.getStudentsByTeacherId(id);
+    return this.studentService.getStudentsByTeacherId(teacherId);
   }
 
   @Put(':studentId')

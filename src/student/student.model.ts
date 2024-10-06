@@ -32,7 +32,7 @@ export class Student extends Model<Student> {
   @ForeignKey(() => Teacher)
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
+    allowNull: true,
   })
   teacherId: number;
 

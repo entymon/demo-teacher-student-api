@@ -13,6 +13,7 @@ export class ValidStudentMiddleware implements NestMiddleware {
     const student = await this.studentRepository.findByPk(parseInt(studentId));
     if (!student) {
       throw new NotFoundException('Student not found');
+      // add some early change
     }
     // change 2 to student.id
     // change 1

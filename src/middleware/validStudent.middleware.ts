@@ -5,6 +5,7 @@ import { StudentRepository } from 'src/student/student.repository';
 @Injectable()
 export class ValidStudentMiddleware implements NestMiddleware {
   constructor(private readonly studentRepository: StudentRepository) {}
+  // query student by id quickFix
 
   async use(req: Request, res: Response, next: NextFunction) {
     const { studentId } = req.params;
@@ -12,10 +13,7 @@ export class ValidStudentMiddleware implements NestMiddleware {
     const student = await this.studentRepository.findByPk(parseInt(studentId));
     if (!student) {
       throw new NotFoundException('Student not found');
-      // add some early change - some extra early change on later change branch
     }
-    // change 2 to student.id let make some change on later branch
-    // change 1
     next();
   }
 }

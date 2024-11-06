@@ -5,6 +5,7 @@ import { StudentRepository } from 'src/student/student.repository';
 @Injectable()
 export class ValidStudentMiddleware implements NestMiddleware {
   constructor(private readonly studentRepository: StudentRepository) {}
+  // query student by id quickFix
 
   async use(req: Request, res: Response, next: NextFunction) {
     const { studentId } = req.params;
